@@ -1,0 +1,31 @@
+---
+title: "HappyDB Analysis"
+author: "Erik Howard"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    fig_width: 10
+    fig_height: 7
+    toc: yes
+    theme: yeti
+    highlight: tango
+    number_sections: false
+    code_folding: show
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+![](images/be_mine.jpg){width=375px}
+
+#Introduction
+Welcome! This is an Exploratory Data Analysis of the [HappyDB](https://rit-public.github.io/HappyDB/) dataset. The HappyDB dataset is a corpus of 100,000+ crowd-sourced happy moments.
+
+
+#Citations
+```
+Akari Asai, Sara Evensen, Behzad Golshan, Alon Halevy, Vivian Li, Andrei Lopatenko, 
+Daniela Stepanov, Yoshihiko Suhara, Wang-Chiew Tan, Yinzhan Xu, 
+``HappyDB: A Corpus of 100,000 Crowdsourced Happy Moments'', LREC '18, May 2018. (to appear)
+```
