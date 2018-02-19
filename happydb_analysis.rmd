@@ -22,6 +22,71 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 #Introduction
 Welcome! This is an Exploratory Data Analysis of the [HappyDB](https://rit-public.github.io/HappyDB/) dataset. The HappyDB dataset is a corpus of 100,000+ crowd-sourced happy moments.
 
+# Setup
+
+## Load packages
+```{r load_packages, warning=FALSE, message=FALSE}
+# list of all packages used in this analysis
+packages = c("tidyverse", "here")
+package.check <- lapply(packages, FUN = function(x) {
+  if (!require(x, character.only = TRUE)) {
+    install.packages(x, dependencies = TRUE)
+    library(x, character.only = TRUE)
+  }
+})
+
+# Seed for reproducible results
+set.seed(2018L)
+```
+
+# Data load and preparation
+
+First, lets load up some happiness into memory.
+```{r load_data}
+happy_df_raw <- read_csv(here("data", "cleaned_hm.csv"))
+demographics_df_raw <- read_csv(here("data", "demographic.csv"))
+```
+
+## Data inspection
+
+## Modifying Happiness
+Based on the HappyDB documentation, we're going to modify a few columns.
+```{r remove_columns}
+happy_df_raw <- happy_df_raw %>%
+  select(-hmid, -original_hm, -modified, -ground_truth_category) %>%
+  rename(hm_category = predicted_category) %>%
+  mutate(reflection_period = replace(reflection_period, reflection_period == "3m", "3")) %>%
+  mutate(reflection_period = replace(reflection_period, reflection_period == "24h", "1440"))
+
+happy_df_raw$reflection_period <- as.integer(happy_df_raw$reflection_period)
+
+demographics_df_raw <- demographics_df_raw %>%
+  select(-age)
+```
+
+Now lets get an idea of the shape of the data.
+```{r data_shape}
+glimpse(happy_df_raw)
+glimpse(demographics_df_raw)
+```
+
+Now lets see if we're missing any moments of happiness in our data
+```{r missing_happiness}
+sapply(happy_df_raw, function(x) sum(is.na(x)))
+sapply(demographics_df_raw, function(x) sum(is.na(x)))
+```
+
+Change class of all chr columns to factor.
+```{r chr_to_factor}
+happy_df_clean <- happy_df_raw %>%
+  mutate_if(sapply(happy_df_raw, is.character), as.factor)
+
+demographics_df_clean <- demographics_df_raw %>%
+  mutate_if(sapply(demographics_df_raw, is.character), as.factor)
+
+glimpse(happy_df_clean)
+glimpse(demographics_df_clean)
+```
 
 #Citations
 ```
