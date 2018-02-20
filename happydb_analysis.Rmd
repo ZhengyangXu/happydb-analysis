@@ -27,7 +27,7 @@ Welcome! This is an Exploratory Data Analysis of the [HappyDB](https://rit-publi
 ## Load packages
 ```{r load_packages, warning=FALSE, message=FALSE}
 # list of all packages used in this analysis
-packages = c("tidyverse", "here")
+packages = c("tidyverse", "here", "tm", "wordcloud", "RColorBrewer")
 package.check <- lapply(packages, FUN = function(x) {
   if (!require(x, character.only = TRUE)) {
     install.packages(x, dependencies = TRUE)
@@ -82,6 +82,31 @@ demographics_df_clean <- demographics_df_raw %>%
 
 glimpse(happy_df_clean)
 glimpse(demographics_df_clean)
+```
+#Language of Happiness
+
+##Word Cloud
+```{r word_cloud}
+hm_corpus <- Corpus(VectorSource(happy_df_clean$cleaned_hm))
+hm_corpus <- tm_map(hm_corpus, removePunctuation)
+hm_corpus <- tm_map(hm_corpus, removeNumbers)
+hm_corpus <- tm_map(hm_corpus, stripWhitespace)
+hm_corpus <- tm_map(hm_corpus, tolower)
+hm_corpus <- tm_map(hm_corpus, removeWords, stopwords("english"))
+limit_words = c("able", "ago", "getting", "will", "makes", "made",
+                "get", "one", "two", "three", "years", "lot", "today",
+                "back", "just", "year", "good", "weeks", "ive", "got",
+                "see", "day", "time", "hours", "things", "last", "came",
+                "didnt", "week", "happy", "also", "can", "yesterday",
+                "months", "since", "now", "month", "really", "great",
+                "found", "happiest")
+hm_corpus <- tm_map(hm_corpus, removeWords, limit_words)
+
+dtm <- DocumentTermMatrix(hm_corpus)
+dtm = removeSparseTerms(dtm, 0.99)
+#findFreqTerms(dtm, 1000)
+freq = data.frame(sort(colSums(as.matrix(dtm)), decreasing=TRUE))
+wordcloud(rownames(freq), freq[,1], scale=c(8,0.5), rot.per=0.35, max.words=100, colors=brewer.pal(8, "Dark2"), random.order=FALSE, use.r.layout=FALSE)
 ```
 
 #Citations
