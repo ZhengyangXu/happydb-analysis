@@ -88,10 +88,10 @@ glimpse(demographics_df_clean)
 ##Word Cloud
 ```{r word_cloud}
 hm_corpus <- Corpus(VectorSource(happy_df_clean$cleaned_hm))
+hm_corpus <- tm_map(hm_corpus, tolower)
 hm_corpus <- tm_map(hm_corpus, removePunctuation)
 hm_corpus <- tm_map(hm_corpus, removeNumbers)
 hm_corpus <- tm_map(hm_corpus, stripWhitespace)
-hm_corpus <- tm_map(hm_corpus, tolower)
 hm_corpus <- tm_map(hm_corpus, removeWords, stopwords("english"))
 limit_words = c("able", "ago", "getting", "will", "makes", "made",
                 "get", "one", "two", "three", "years", "lot", "today",
