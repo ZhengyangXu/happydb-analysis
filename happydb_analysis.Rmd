@@ -54,11 +54,7 @@ Based on the HappyDB documentation, we're going to modify a few columns.
 ```{r remove_columns}
 happy_df_raw <- happy_df_raw %>%
   select(-hmid, -original_hm, -modified, -ground_truth_category) %>%
-  rename(hm_category = predicted_category) %>%
-  mutate(reflection_period = replace(reflection_period, reflection_period == "3m", "3")) %>%
-  mutate(reflection_period = replace(reflection_period, reflection_period == "24h", "1440"))
-
-happy_df_raw$reflection_period <- as.integer(happy_df_raw$reflection_period)
+  rename(hm_category = predicted_category)
 
 demographics_df_raw <- demographics_df_raw %>%
   select(-age)
